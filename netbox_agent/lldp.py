@@ -67,4 +67,10 @@ class LLDP():
         # lldp.eth0.vlan.vlan-id=296
         if self.data['lldp'].get(interface) is None:
             return None
-        return self.data['lldp'][interface]['vlan']
+        vlans = self.data['lldp'][interface]['vlan']
+        for k,v in list(vlans.items()):
+            if k.startswith('VLAN'):
+                vlans.pop(k)
+        print(vlans)
+        return vlans
+

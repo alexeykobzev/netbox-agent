@@ -76,10 +76,11 @@ class LSHW():
             i for i in self.interfaces if i["name"].startswith("unknown")
         ]
         unkn_name = "unknown{}".format(len(unkn_intfs))
+        mac = subprocess.getoutput('ethtool -P {}'.format(obj.get("logicalname", unkn_name))).split(' ')[2]
         self.interfaces.append({
             "name": obj.get("logicalname", unkn_name),
-            "macaddress": obj.get("serial", ""),
-            "serial": obj.get("serial", ""),
+            "macaddress": mac,
+            "serial": mac,
             "product": obj["product"],
             "vendor": obj["vendor"],
             "description": obj["description"],

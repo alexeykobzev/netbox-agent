@@ -2,6 +2,7 @@ import logging
 import os
 import re
 from itertools import chain
+import subprocess
 
 import netifaces
 from netaddr import IPAddress
@@ -84,7 +85,9 @@ class Network(object):
                 addr["netmask"] = addr["netmask"].split('/')[0]
                 ip_addr.append(addr)
 
-            mac = open('/sys/class/net/{}/address'.format(interface), 'r').read().strip()
+            mac = subprocess.getoutput('ethtool -P {}'.format(interface)).split(' ')[2]
+            if mac == '00:00:00:00:00:00':
+                mac = open('/sys/class/net/{}/address'.format(interface), 'r').read().strip()
             vlan = None
             if len(interface.split('.')) > 1:
                 vlan = int(interface.split('.')[1])
